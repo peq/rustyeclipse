@@ -38,145 +38,94 @@
             value="true">
       </persistent>
    </extension>
+   <!-- error decorator -->
+   <extension point="org.eclipse.ui.decorators">
+	<decorator
+	    id="rustyeclipse.decorators"
+	    label="Rust Decorator"
+	    state="true"
+	    lightweight= "true"	    
+	    class= "rustyeclipse.ui.Decorators"
+	    adaptable="true">
+	    <description>
+	      Adds error markers for Rust.
+	    </description>
+	    <enablement>
+	    <objectClass 
+           name="org.eclipse.core.resources.IResource">
+	    </objectClass>
+	    </enablement>
+	  </decorator>
+	</extension>
 <!-- editor -->
    <extension
          point="org.eclipse.ui.editors">
       <editor
             name="Rust Editor"
             extensions="rs"
-            icon="icons/sample.gif"
+            icon="icons/rustfile.png"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             class="rustyeclipse.editors.RustEditor"
             id="rustyeclipse.editors.RustEditor">
       </editor>
    </extension>
-
-<!-- content type for rust files -->
-
-	<extension point="org.eclipse.core.contenttype.contentTypes">
-      <content-type
-            base-type="org.eclipse.core.runtime.text"
-            describer="rustyeclipse.core.RustContentDescriber"
-            file-extensions="rs"
-            id="rustyeclipse.content-type"
-            name="Rust content type"
-            priority="high">
-      </content-type>
-   </extension>
-
-<!-- the dynamic language toolkit -->
-
-	<extension point="org.eclipse.dltk.core.language">
-      <language
-            class="rustyeclipse.core.RustLanguageToolkit"
-            nature="rustyeclipse.nature"
-            priority="0">
-      </language>
-   </extension>
-   
-   <extension point="org.eclipse.dltk.ui.language">
-      <language
-            class="rustyeclipse.ui.RustUILanguageToolkit"
-            nature="rustyeclipse.nature"
-            priority="0">
-      </language>
-   </extension>
-   
-   <extension
-         point="org.eclipse.dltk.core.sourceElementParsers">
-      <parser
-            class="rustyeclipse.core.parser.RustSourceElementParser"
-            nature="rustyeclipse.nature"
-            priority="0">
-      </parser>
-   </extension>
-
-<!-- new project wizard -->
-
-	<extension point="org.eclipse.ui.newWizards">
-      <wizard
-            category="org.eclipse.dltk.examples.python.category"
-            class="org.eclipse.dltk.ui.wizards.GenericDLTKProjectWizard:rustyeclipse.nature"
-            icon="icons/rust.png"
-            id="rustyeclipse.newProjectWizard"
-            name="Rust ProjectWizard"
-            project="true">
-      </wizard>
-      <category
-            id="rustyeclipse.category"
-            name="Rust">
-      </category>
-   </extension>
-   
-   <!-- interpreter -->
-   
-   
-   <extension point="org.eclipse.dltk.launching.interpreterInstallTypes">
-      <interpreterInstallType
-            class="rustyeclipse.interpreter.RustInstallType"
-            id="rustyeclipse.interpreter.RustInstallType">
-      </interpreterInstallType>
-   </extension>
-   
-   <extension
-         point="org.eclipse.ui.preferencePages">
-      <page class="rustyeclipse.interpreter.ui.RustInterpreterPreferencePage"
-            id="org.eclipse.dltk.python.examples.preferences.interpreters"
-            name="Rust Interpreters"/>
-   </extension>
-   
-   <!-- launching -->
-   
-   <extension point="org.eclipse.debug.core.launchConfigurationTypes">
-	   <launchConfigurationType
-	      id="rustyeclipse.interpreter.RustLaunchConfigurationType"
-	      delegate="rustyeclipse.interpreter.launch.RustLaunchConfigurationDelegate"
-	      modes="run"
-	      public="true"
-	      name="Rust">
-	   </launchConfigurationType>
+<!-- Wizards -->
+	<extension
+	      point = "org.eclipse.ui.newWizards">
+		<category
+		   id = "rustyeclipse.wizards"
+		   name="Rust">
+		</category>
+	 	<wizard
+		   id = "rustyeclipse.newproject"
+			name = "Rust Project"
+			project="true"
+			finalPerspective="rustyeclipse.rustperspective"
+		   class="rustyeclipse.ui.wizards.NewProjectWizard"
+		   category="rustyeclipse.wizards"
+		   icon="icons/rust.png">
+	    	   <description>Create a new Rust project</description>
+		   <selection class="org.eclipse.core.resources.IResource"/>
+		</wizard>
+		<wizard
+		   id = "rustyeclipse.wizards.newfile"
+			name = "Rust File"
+			project="false"
+			finalPerspective="rustyeclipse.rustperspective"
+		   class="rustyeclipse.ui.wizards.NewPackageWizard"
+		   category="de.peeeq.eclipsewurstplugin.wizards"
+		   icon="icons/rustyrust.png">
+	    	   <description>Create a new Rust file</description>
+		   <selection class="org.eclipse.core.resources.IResource"/>
+		</wizard>
 	</extension>
+ <!-- navigator content -->
+    <extension
+      point="org.eclipse.ui.navigator.navigatorContent">
+      <!-- add new project wizard to project and workspace rightclick menu -->
+       <commonWizard
+             type="new"
+             wizardId="rustyeclipse.newproject">
+          <enablement>
+             <or>
+                <adapt type="org.eclipse.core.resources.IProject" />
+                <adapt type="org.eclipse.core.resources.IWorkspaceRoot" /> 
+             </or>
+        	</enablement>
+       </commonWizard>
+       <!-- add new file wizard to project and folders rightclick menu -->
+        <commonWizard
+             type="new"
+             wizardId="rustyeclipse.wizards.newfile">
+          <enablement>
+             <or>
+                <adapt type="org.eclipse.core.resources.IProject" />
+                <adapt type="org.eclipse.core.resources.IFolder" />
+             </or>
+        	</enablement>
+       </commonWizard>
+   </extension>	
+    
 
-	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
-	    <launchConfigurationTypeImage
-	        icon="icons/rustyrust.png"
-	        configTypeID="rustyeclipse.interpreter.RustLaunchConfigurationType"
-	        id="rustyeclipse.interpreter.lauchconfig.image">
-	    </launchConfigurationTypeImage>
-	</extension>
-    <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
-	    <launchConfigurationTabGroup
-	        type="rustyeclipse.interpreter.RustLaunchConfigurationType"
-	        class="rustyeclipse.interpreter.launch.TabGroup"
-	        id="rustyeclipse.interpreter.lauchconfig.tabgroup">
-	    </launchConfigurationTabGroup>
-	</extension>
-	<extension point="org.eclipse.debug.ui.launchShortcuts">
-	    <shortcut
-	        id="rustyeclipse.interpreter.lauchconfig.Shortcut"
-	        class="rustyeclipse.interpreter.launch.Shortcut"
-	        label="Rust"
-	        icon="icons/rustyrust.png"
-	        modes="run">
-	        <contextualLaunch>
-	           <enablement>
-	             <with variable="selection">
-	               <count value="1"/>
-	               <iterate>
-	                 <or>
-	                   <test property="org.eclipse.debug.ui.matchesPattern" value="*.rs"/>
-	                   <adapt type="org.eclipse.core.resources.IProject"/>
-	                   <!--<instanceof value="org.eclipse.jdt.core.IJavaElement"/>-->
-	                 </or>
-	                 <!--<test property="org.eclipse.debug.ui.projectNature"
-                           value="de.peeeq.eclipsewurstplugin.builder.WurstNature" />-->
-	                 <!--<test property="org.eclipse.jdt.debug.ui.hasMainType"/>-->
-	               </iterate>
-	             </with>
-	           </enablement>
-	  		 </contextualLaunch>
-	    </shortcut>
-	</extension>
-	
 
 </plugin>

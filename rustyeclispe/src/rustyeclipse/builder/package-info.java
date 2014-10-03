@@ -1,3 +1,3 @@
 @org.eclipse.jdt.annotation.NonNullByDefault
-package rustyeclipse.interpreter.ui;
+package rustyeclipse.builder;
 

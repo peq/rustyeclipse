@@ -67,10 +67,12 @@ public class RustConstants {
 	public static final String[] PARTITION_TYPES = {PARTITION_SINLGE_LINE_COMMENT, PARTITION_MULTI_LINE_COMMENT, PARTITION_STRING, PARTITION_CHARACTER};
 	
 	// marker
-	public static final String START_POS = PLUGIN_PACKAGE + ".startPos";
-	public static final String END_POS = PLUGIN_PACKAGE + ".endPos";
+	public static final String POS_START_LINE = PLUGIN_PACKAGE + ".startPosLine";
+	public static final String POS_START_COLUMN = PLUGIN_PACKAGE + ".startPosColumn";
+	public static final String POS_END_LINE = PLUGIN_PACKAGE + ".endPosLine";
+	public static final String POS_END_COLUMN = PLUGIN_PACKAGE + ".endPosColumn";
 
-	public static final String PLUGIN_ID = "EclipseRustPlugin";
+	public static final String PLUGIN_ID = "rustyeclipse";
 
 	public static final String RUST_PARTITIONING = "__rust_partitioning";
 

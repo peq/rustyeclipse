@@ -4,10 +4,16 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.annotation.Nullable;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.IDocumentExtension3;
+import org.eclipse.jface.text.source.DefaultCharacterPairMatcher;
+import org.eclipse.jface.text.source.ICharacterPairMatcher;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
+import rustyeclipse.core.RustConstants;
 import rustyeclipse.core.RustNature;
 
 public class RustEditor extends TextEditor {
@@ -17,7 +23,7 @@ public class RustEditor extends TextEditor {
 	public RustEditor() {
 		super();
 		colorManager = new ColorManager();
-		setSourceViewerConfiguration(new RustConfiguration(colorManager));
+		setSourceViewerConfiguration(new RustEditorConfig(this, colorManager));
 		setDocumentProvider(new RustDocumentProvider());
 		
 		
@@ -66,6 +72,20 @@ public class RustEditor extends TextEditor {
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	protected void configureSourceViewerDecorationSupport (@Nullable SourceViewerDecorationSupport support) {
+		super.configureSourceViewerDecorationSupport(support);
+		IPreferenceStore store = getPreferenceStore();
+		char[] matchChars = {'(', ')', '[', ']', '{', '}'}; //which brackets to match
+		ICharacterPairMatcher matcher = new DefaultCharacterPairMatcher(matchChars ,
+				IDocumentExtension3.DEFAULT_PARTITIONING);
+		support.setCharacterPairMatcher(matcher);
+		support.setMatchingCharacterPainterPreferenceKeys(RustConstants.EDITOR_MATCHING_BRACKETS,RustConstants. EDITOR_MATCHING_BRACKETS_COLOR);
+		//Enable bracket highlighting in the preference store
+		store.setDefault(RustConstants.EDITOR_MATCHING_BRACKETS, true);
+		store.setDefault(RustConstants.EDITOR_MATCHING_BRACKETS_COLOR, RustConstants.DEFAULT_MATCHING_BRACKETS_COLOR);
 	}
 
 }

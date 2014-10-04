@@ -2,6 +2,7 @@ package rustyeclipse.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.Function;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
@@ -17,7 +18,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -131,14 +134,38 @@ public class RustNature implements IProjectNature {
 	public static void open(IProject p, String fileName, int offset) {
 		RustNature nature = get(p);
 		if (nature != null) {
-			nature.open(fileName, offset);
+			nature.openAtOffset(fileName, offset);
 		}
 	}
 	
-	private @Nullable RustEditor open(String fileName, int offset) {
+	public static void open(IProject p, SourcePos pos) {
+		RustNature nature = get(p);
+		if (nature != null) {
+			nature.openAtLine(pos.getFile(), pos.getStartLine(), pos.getStartColumn());
+		}
+	}
+	
+	private void openAtLine(String fileName, int line, int column) {
+		open(fileName, (RustEditor e) -> {
+			IEditorInput editorInput = e.getEditorInput();
+			IDocument doc = e.getDocumentProvider().getDocument(editorInput);
+			try {
+				return doc.getLineOffset(line) + column;
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				return 1;
+			}
+		});
+	}
+
+	private @Nullable RustEditor openAtOffset(String fileName, int offset) {
+		return open(fileName, e -> offset);
+	}
+	
+	private @Nullable RustEditor open(String fileName, Function<RustEditor, Integer> offsetProvider) {
 		IFile file = getProject().getFile(fileName);
 		if (file.exists()) {
-			RustEditor editor = open(file, offset);
+			RustEditor editor = open(file, offsetProvider);
 			return editor;
 		} else { // open external file
 			IFileStore fileStore = EFS.getLocalFileSystem().getStore(new Path(fileName));
@@ -147,7 +174,7 @@ public class RustNature implements IProjectNature {
 			        IEditorPart editor = IDE.openEditorOnFileStore(getActiveWorkbenchPage(), fileStore);
 			        if (editor instanceof RustEditor) {
 						RustEditor wurstEditor = (RustEditor) editor;
-						wurstEditor.setHighlightRange(offset, 0, true);
+						wurstEditor.setHighlightRange(offsetProvider.apply(wurstEditor), 0, true);
 						return wurstEditor;
 					}
 			    } catch (PartInitException e) {
@@ -162,12 +189,12 @@ public class RustNature implements IProjectNature {
 		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 	}
 
-	public @Nullable RustEditor open(IFile file, int offset) {
+	public @Nullable RustEditor open(IFile file, Function<RustEditor, Integer> offsetProvider) {
 		try {
 			IEditorPart editor = IDE.openEditor(getActiveWorkbenchPage(), file);
 			if (editor instanceof RustEditor) {
 				RustEditor wurstEditor = (RustEditor) editor;
-				wurstEditor.setHighlightRange(offset, 0, true);
+				wurstEditor.setHighlightRange(offsetProvider.apply(wurstEditor), 0, true);
 				return wurstEditor;
 			}
 		} catch (PartInitException e) {
@@ -198,4 +225,6 @@ public class RustNature implements IProjectNature {
 		}
 		
 	}
+
+	
 }

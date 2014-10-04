@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -19,6 +21,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 
+import rustyeclipse.builder.SourcePos;
 import rustyeclipse.editors.RustEditor;
 import rustyeclipse.util.Utils;
 
@@ -41,12 +44,9 @@ public class RustHyperlinkDetector implements IHyperlinkDetector {
 		return calculateHyperlinks(offset, useMouse);
 	}
 
-	public IHyperlink[] calculateHyperlinks(int offset, boolean useMouse) {
+	public IHyperlink @Nullable[] calculateHyperlinks(int offset, boolean useMouse) {
+		File tempFile = null;
 		try {
-			System.out.println("Get hyperlinks at offset " + offset);
-	//		$ export RUST_SRC_PATH=~/work/rust/src
-	//		$ ~/work/racer/bin/racer find-definition 12 19 src/main.rs 
-	//		MATCH return_two,6,3,src/main.rs,Function,fn return_two() -> int {
 	
 			IEditorInput editorInput = editor.getEditorInput();
 			if (!(editorInput instanceof FileEditorInput)) {
@@ -61,12 +61,10 @@ public class RustHyperlinkDetector implements IHyperlinkDetector {
 			columnNr++;
 			
 			File file = fileInput.getFile().getLocation().toFile();
-			File tempFile = new File(file.getParent(), file.getName() + ".racertmp");
+			tempFile = new File(file.getParent(), file.getName() + ".racertmp");
 			
 			String text = document.get();
 			Files.write(text, tempFile, Charsets.UTF_8);
-			
-			System.out.println("	file " + file + ", line = " + lineNr + ":" + columnNr);
 			
 			List<String> command = new ArrayList<>();
 			command.add("racer");
@@ -74,7 +72,6 @@ public class RustHyperlinkDetector implements IHyperlinkDetector {
 			command.add(""+lineNr);
 			command.add(""+columnNr);
 			command.add(tempFile.getAbsolutePath());
-			System.out.println("command = " + command);
 			ProcessBuilder pb = new ProcessBuilder(command);
 			pb.environment().put("RUST_SRC_PATH", "~/work/rust/src");
 			Process proc = pb.start();
@@ -85,13 +82,44 @@ public class RustHyperlinkDetector implements IHyperlinkDetector {
 			for (String msg : errors) {
 				System.out.println("ERROR: " + msg);
 			}
+			List<RustHyperlink> hyperLinks = new ArrayList<>();
 			for (String msg : output) {
-				System.out.println(msg);
+				if (msg.startsWith("MATCH ")) {
+					msg = msg.substring("MATCH ".length());
+					String[] parts = msg.split(",");
+					String matched = parts[0];
+					int line = Integer.parseInt(parts[1]);
+					int column = Integer.parseInt(parts[2]);
+					String declFile = parts[3];
+					String type = parts[4];
+					String preview = parts[5];
+					
+					if (new File(declFile).equals(tempFile)) {
+						declFile = file.getAbsolutePath();
+					}
+					
+					line--;
+					
+					IProject project = editor.getProject();
+					
+					int start = Utils.findPosOfString(text, matched, offset);
+					
+					int end = start + matched.length() - 1;
+					SourcePos declPos = new SourcePos(declFile, line, column, line, column+1);
+					hyperLinks.add(new RustHyperlink(project, start, end, declPos));
+				}
 			}
-		
+			if (hyperLinks.isEmpty()) {
+				return null;
+			}
+			return hyperLinks.toArray(new IHyperlink[0]);
 		} catch (BadLocationException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			if (tempFile != null) {
+				tempFile.delete();
+			}
 		}
 		return null;
 	}

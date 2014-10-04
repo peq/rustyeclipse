@@ -46,7 +46,7 @@ public class NewPackageWizard extends Wizard implements INewWizard {
                     if (nature == null) {
                     	throw new RuntimeException("No Rust nature found.");
                     }
-                    nature.open(file, 0);
+                    nature.open(file, e -> 0);
                 	
 //                    IDocument doc = editor.getDocumentProvider().getDocument(editor.getEditorInput());
 //                    String code = ""; // TODO add some initial code to the file?

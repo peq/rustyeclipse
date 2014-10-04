@@ -48,4 +48,22 @@ public class Utils {
 		collectInputStream(inputStream, result);
 		return result;
 	}
+
+	public static int findPosOfString(String text, String toFind, int offset) {
+		for (int i=offset; i>=0; i--) {
+			if (startsWithAt(text, toFind, i)) {
+				return i;
+			}
+		}
+		return offset;
+	}
+
+	private static boolean startsWithAt(String text, String toFind, int offset) {
+		for (int i=0; i<toFind.length(); i++) {
+			if (offset+i>=text.length() || text.charAt(offset+i) != toFind.charAt(i)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

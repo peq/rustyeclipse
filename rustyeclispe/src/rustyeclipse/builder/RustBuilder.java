@@ -95,7 +95,7 @@ public class RustBuilder extends IncrementalProjectBuilder {
 			    file = file.replaceFirst(projectPath, "");
 			    IFile ifile = project.getFile(file);
 			    if (ifile != null) {
-			    	SourcePos position = new SourcePos(startLine-1, startColumn-1, endLine-1, endColumn-1);
+			    	SourcePos position = new SourcePos(file, startLine-1, startColumn-1, endLine-1, endColumn-1);
 			    	CompileError err = new CompileError(position, message, ErrorType.ERROR);
 					RustNature.addErrorMarker(ifile, err, MARKER_TYPE);
 			    }

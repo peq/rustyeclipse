@@ -9,7 +9,11 @@ import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.source.DefaultCharacterPairMatcher;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
@@ -18,6 +22,7 @@ import rustyeclipse.core.RustNature;
 
 public class RustEditor extends TextEditor {
 
+	private static final String EDITOR_SCOPE = "rustyeclipse.rusteditorscope";
 	private ColorManager colorManager;
 
 	public RustEditor() {
@@ -25,8 +30,14 @@ public class RustEditor extends TextEditor {
 		colorManager = new ColorManager();
 		setSourceViewerConfiguration(new RustEditorConfig(this, colorManager));
 		setDocumentProvider(new RustDocumentProvider());
+	}
+	
+	@Override
+	public void init(@Nullable IEditorSite site, @Nullable IEditorInput input) throws PartInitException {
+		super.init(site, input);
 		
-		
+        IContextService cs = (IContextService)getSite().getService(IContextService.class);
+        cs.activateContext(EDITOR_SCOPE);
 	}
 	
 	@Override

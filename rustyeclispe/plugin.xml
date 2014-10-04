@@ -93,7 +93,7 @@
 			project="false"
 			finalPerspective="rustyeclipse.rustperspective"
 		   class="rustyeclipse.ui.wizards.NewPackageWizard"
-		   category="de.peeeq.eclipsewurstplugin.wizards"
+		   category="rustyeclipse.wizards"
 		   icon="icons/rustyrust.png">
 	    	   <description>Create a new Rust file</description>
 		   <selection class="org.eclipse.core.resources.IResource"/>
@@ -125,7 +125,38 @@
         	</enablement>
        </commonWizard>
    </extension>	
-    
-
+ <!-- editor hotkeys -->
+   <extension point="org.eclipse.ui.commands">
+       <command
+             id="rustyeclipse.jumpdecl"
+             defaultHandler="rustyeclipse.editor.JumpToDeclHandler"
+             name="Rust: Jump to declaration">
+       </command>
+       <command
+             id="rustyeclipse.togglecomment"
+             defaultHandler="rustyeclipse.editor.ToggleCommentHandler"
+             name="Rust: Toggle Comment">
+       </command>
+    </extension>
+    <extension point="org.eclipse.ui.bindings">
+       <key
+             commandId="rustyeclipse.jumpdecl"
+             contextId="rustyeclipse.rusteditorscope"
+             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+             sequence="F3">
+       </key>
+       <key sequence="Ctrl+7"
+			commandId="rustyeclipse.togglecomment"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			contextId="rustyeclipse.rusteditorscope"/>
+    </extension>
+        <extension
+          point="org.eclipse.ui.contexts">
+       <context
+             id="rustyeclipse.rusteditorscope"
+             name="Rust Editor Scope"
+             parentId="org.eclipse.ui.textEditorScope">
+       </context>
+    </extension>
 
 </plugin>

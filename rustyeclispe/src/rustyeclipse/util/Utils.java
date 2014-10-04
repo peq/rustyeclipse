@@ -1,5 +1,10 @@
 package rustyeclipse.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,4 +32,20 @@ public class Utils {
 		return s;
 	}
 
+	
+	private static void collectInputStream(InputStream inputStream, List<String> collectTo) throws IOException {
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+			String line=null;
+		    while ( (line = br.readLine()) != null) {
+		        System.out.println(line);
+				collectTo.add(line);
+		    }
+		}
+	}
+	
+	public static List<String> streamToList(InputStream inputStream) throws IOException {
+		List<String> result = new ArrayList<>();
+		collectInputStream(inputStream, result);
+		return result;
+	}
 }

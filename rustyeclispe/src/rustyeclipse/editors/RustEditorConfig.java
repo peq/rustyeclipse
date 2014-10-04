@@ -1,10 +1,12 @@
 package rustyeclipse.editors;
 
 import org.eclipse.jdt.annotation.Nullable;
+import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.ITextHover;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
@@ -16,6 +18,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import rustyeclipse.core.RustConstants;
 import rustyeclipse.core.RustCorePlugin;
+import rustyeclipse.editor.RustHyperlinkDetector;
 import rustyeclipse.ui.RustTextHover;
 import rustyeclipse.util.Utils;
 
@@ -32,60 +35,69 @@ public class RustEditorConfig extends SourceViewerConfiguration {
 	public String[] getConfiguredContentTypes(@Nullable ISourceViewer sourceViewer) {
 		return Utils.joinArrays(new String[] { IDocument.DEFAULT_CONTENT_TYPE }, RustPartitionScanner.PARTITION_TYPES);
 	}
-	
+
 	@Override
 	public String getConfiguredDocumentPartitioning(@Nullable ISourceViewer sourceViewer) {
 		return RustConstants.RUST_PARTITIONING;
 	}
 
-	
 	@Override
 	public IPresentationReconciler getPresentationReconciler(@Nullable ISourceViewer sourceViewer) {
 		RustCorePlugin plugin = RustCorePlugin.getDefault();
-		PresentationReconciler reconciler= new PresentationReconciler();
-//		reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+		PresentationReconciler reconciler = new PresentationReconciler();
+		// reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 		reconciler.setDocumentPartitioning(RustConstants.RUST_PARTITIONING);
 
-		DefaultDamagerRepairer dr= new DefaultDamagerRepairer(plugin.scanners().rustCodeScanner());
+		DefaultDamagerRepairer dr = new DefaultDamagerRepairer(plugin.scanners().rustCodeScanner());
 		reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
 		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
-		
-		dr= new DefaultDamagerRepairer(plugin.scanners().rustCodeScanner());
+
+		dr = new DefaultDamagerRepairer(plugin.scanners().rustCodeScanner());
 		reconciler.setDamager(dr, RustPartitionScanner.RUST_OTHER);
 		reconciler.setRepairer(dr, RustPartitionScanner.RUST_OTHER);
 
-		dr= new DefaultDamagerRepairer(plugin.scanners().hotDocScanner());
+		dr = new DefaultDamagerRepairer(plugin.scanners().hotDocScanner());
 		reconciler.setDamager(dr, RustPartitionScanner.HOT_DOC);
 		reconciler.setRepairer(dr, RustPartitionScanner.HOT_DOC);
 
-		dr= new DefaultDamagerRepairer(plugin.scanners().multilineCommentScanner());
+		dr = new DefaultDamagerRepairer(plugin.scanners().multilineCommentScanner());
 		reconciler.setDamager(dr, RustPartitionScanner.RUST_MULTILINE_COMMENT);
 		reconciler.setRepairer(dr, RustPartitionScanner.RUST_MULTILINE_COMMENT);
 
 		return reconciler;
 	}
-	
-	
-	  @Override
-	  public IInformationControlCreator getInformationControlCreator(@Nullable ISourceViewer sourceViewer) {
-		  return new IInformationControlCreator() {
-			  public IInformationControl createInformationControl(@Nullable Shell parent) {
-				  //return new DefaultInformationControl(parent,new HTMLTextPresenter(false));
-				  //	            	return new BrowserInformationControl(parent, "sans", false);
-				  return new RustInformationControl(parent);
-			  }
 
-		  };
-	  }
-	  
-	  @Override
-	  public ITextHover getTextHover(@Nullable ISourceViewer sourceViewer, @Nullable String contentType){
-		  return new RustTextHover(sourceViewer, editor);
-	  }
+	@Override
+	public IInformationControlCreator getInformationControlCreator(@Nullable ISourceViewer sourceViewer) {
+		return new IInformationControlCreator() {
+			public IInformationControl createInformationControl(@Nullable Shell parent) {
+				// return new DefaultInformationControl(parent,new
+				// HTMLTextPresenter(false));
+				// return new BrowserInformationControl(parent, "sans", false);
+				return new RustInformationControl(parent);
+			}
 
-	  @Override
-	  public IAnnotationHover getAnnotationHover(@Nullable ISourceViewer sourceViewer) {
-		  return new DefaultAnnotationHover();
-	  }
+		};
+	}
+
+	@Override
+	public ITextHover getTextHover(@Nullable ISourceViewer sourceViewer, @Nullable String contentType) {
+		return new RustTextHover(sourceViewer, editor);
+	}
+
+	@Override
+	public IAnnotationHover getAnnotationHover(@Nullable ISourceViewer sourceViewer) {
+		return new DefaultAnnotationHover();
+	}
+
+	@Override
+	public IHyperlinkDetector[] getHyperlinkDetectors(@Nullable ISourceViewer sourceViewer) {
+		return new IHyperlinkDetector[] { new RustHyperlinkDetector(editor) };
+	}
+
+	@Override
+	public IAutoEditStrategy[] getAutoEditStrategies(@Nullable ISourceViewer sourceViewer, @Nullable String contentType) {
+		return new IAutoEditStrategy[] { new RustAutoIndentStrategy() };
+	}
 
 }

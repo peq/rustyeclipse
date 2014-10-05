@@ -33,8 +33,6 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 import org.eclipse.ui.texteditor.StatusTextEditor;
 
-import de.peeeq.eclipsewurstplugin.editor.WurstDocumentProvider;
-import de.peeeq.eclipsewurstplugin.editor.WurstTextDocumentProvider;
 import rustyeclipse.core.RustConstants;
 import rustyeclipse.core.RustNature;
 
@@ -69,7 +67,7 @@ public class RustEditor extends TextEditor {
 			return new RustDocumentProvider();
 		} else if(input instanceof IFileEditorInput
 				|| input instanceof FileStoreEditorInput) {
-			return new WurstTextDocumentProvider();
+			return new RustTextDocumentProvider();
 		}
 		throw new Error("Got IEditorInput of type " + input.getClass());
 		

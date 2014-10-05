@@ -2,6 +2,7 @@ package rustyeclipse.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.eclipse.core.filesystem.EFS;
@@ -147,10 +148,12 @@ public class RustNature implements IProjectNature {
 	
 	private void openAtLine(String fileName, int line, int column) {
 		open(fileName, (RustEditor e) -> {
-			IEditorInput editorInput = e.getEditorInput();
-			IDocument doc = e.getDocumentProvider().getDocument(editorInput);
+			Optional<IDocument> doc = e.getDocumentOpt();
+			if (!doc.isPresent()) {
+				return 1;
+			}
 			try {
-				return doc.getLineOffset(line) + column;
+				return doc.get().getLineOffset(line) + column;
 			} catch (Exception e1) {
 				e1.printStackTrace();
 				return 1;
@@ -168,18 +171,26 @@ public class RustNature implements IProjectNature {
 			RustEditor editor = open(file, offsetProvider);
 			return editor;
 		} else { // open external file
+//			fileName = "/home/peter/temp/main.wurst";
 			IFileStore fileStore = EFS.getLocalFileSystem().getStore(new Path(fileName));
 			if (!fileStore.fetchInfo().isDirectory() && fileStore.fetchInfo().exists()) {
-			    try {
-			        IEditorPart editor = IDE.openEditorOnFileStore(getActiveWorkbenchPage(), fileStore);
-			        if (editor instanceof RustEditor) {
-						RustEditor wurstEditor = (RustEditor) editor;
-						wurstEditor.setHighlightRange(offsetProvider.apply(wurstEditor), 0, true);
-						return wurstEditor;
+			    IWorkbenchPage activeWorkbenchPage = getActiveWorkbenchPage();
+				System.out.println("activeWorkbenchPage = " + activeWorkbenchPage);
+				System.out.println("fileStor = " + fileStore);
+				
+				IEditorPart[] editor = {null};
+				Display.getDefault().syncExec(() -> {
+					try {
+						editor[0] = IDE.openEditorOnFileStore(activeWorkbenchPage, fileStore);
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-			    } catch (PartInitException e) {
-			    	e.printStackTrace();
-			    }
+				});
+				if (editor[0] instanceof RustEditor) {
+					RustEditor wurstEditor = (RustEditor) editor[0];
+					wurstEditor.setHighlightRange(offsetProvider.apply(wurstEditor), 0, true);
+					return wurstEditor;
+				}
 			}
 		}
 		return null;

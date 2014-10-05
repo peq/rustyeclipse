@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
@@ -53,7 +54,11 @@ public class RustHyperlinkDetector implements IHyperlinkDetector {
 				return null;
 			}
 			FileEditorInput fileInput = (FileEditorInput) editorInput;
-			IDocument document = editor.getDocumentProvider().getDocument(editorInput);
+			Optional<IDocument> documentOpt = editor.getDocumentOpt();
+			if (!documentOpt.isPresent()) {
+				return null;
+			}
+			IDocument document = documentOpt.get();
 			int lineNr = document.getLineOfOffset(offset);
 			int columnNr = offset - document.getLineOffset(lineNr);
 			
@@ -73,7 +78,7 @@ public class RustHyperlinkDetector implements IHyperlinkDetector {
 			command.add(""+columnNr);
 			command.add(tempFile.getAbsolutePath());
 			ProcessBuilder pb = new ProcessBuilder(command);
-			pb.environment().put("RUST_SRC_PATH", "~/work/rust/src");
+			pb.environment().put("RUST_SRC_PATH", "/home/peter/work/rust/src");
 			Process proc = pb.start();
 			
 			List<String> output = Utils.streamToList(proc.getInputStream());
@@ -83,7 +88,9 @@ public class RustHyperlinkDetector implements IHyperlinkDetector {
 				System.out.println("ERROR: " + msg);
 			}
 			List<RustHyperlink> hyperLinks = new ArrayList<>();
+			System.out.println(command);
 			for (String msg : output) {
+				System.out.println("	" + msg);
 				if (msg.startsWith("MATCH ")) {
 					msg = msg.substring("MATCH ".length());
 					String[] parts = msg.split(",");

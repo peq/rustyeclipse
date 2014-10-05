@@ -81,7 +81,7 @@ public class SimpleCodeScanner extends RuleBasedScanner implements RustScanner {
 				new EndOfLineRule("//", commentToken), 
 				new SingleLineRule("\"", "\"", stringToken, '\\'),
 				new SingleLineRule("@", " ", annotationToken),
-				new SingleLineRule("'", "'", stringToken, '\\'), 
+//				new SingleLineRule("'", "'", stringToken, '\\'), 
 //				new MultiLineRule("/*", "*/", commentToken),
 				whitespaceRule,
 				keywordRule,

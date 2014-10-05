@@ -52,15 +52,11 @@ public class RustTextHover implements ITextHover,
 		Iterator<?> e= model.getAnnotationIterator();
 		while (e.hasNext()) {
 			Annotation a= (Annotation) e.next();
-			System.out.println("annotation = a");
 			if (isIncluded(a)) {
 				Position p= model.getPosition(a);
-				System.out.println("	included, pos = " + p);
 				if (p != null && p.overlapsWith(hoverRegion.getOffset(), hoverRegion.getLength())) {
 					String msg= a.getText();
-					System.out.println("	msg = " + msg);
 					if (msg != null && msg.trim().length() > 0)
-						System.out.println("	done");
 						return Utils.escapeHtml(msg);
 				}
 			}

@@ -91,7 +91,6 @@ public class RustPartitionScanner extends RuleBasedPartitionScanner {
 
 		// Add rule for strings and character constants.
 		rules.add(new SingleLineRule("\"", "\"", other, '\\')); //$NON-NLS-2$ //$NON-NLS-1$
-		rules.add(new SingleLineRule("'", "'", other, '\\')); //$NON-NLS-2$ //$NON-NLS-1$
 
 		// Add special case word rule.
 		rules.add(new WordPredicateRule(comment));

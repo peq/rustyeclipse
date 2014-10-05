@@ -96,15 +96,19 @@ public class NewProjectWizard extends Wizard implements INewWizard {
 		try {
 			String cargoContents = "[package]\n\nname = \""+projectName+"\"\nversion = \"0.0.1\"";
 			File cargoFile = new File(f, "Cargo.toml");
-			Files.write(cargoContents, cargoFile, Charsets.UTF_8);
+			if (!cargoFile.exists()) {
+				Files.write(cargoContents, cargoFile, Charsets.UTF_8);
+			}
 			
 			
 			
 			String rs = "fn main() {\n\tprintln!(\"Hello World!\");\n}\n";
 			File srcDir = new File(f, "src");
-			srcDir.mkdirs();
-			File rsFile = new File(srcDir, "main.rs");
-			Files.write(rs, rsFile, Charsets.UTF_8);
+			if (!srcDir.exists()) {
+				srcDir.mkdirs();
+				File rsFile = new File(srcDir, "main.rs");
+				Files.write(rs, rsFile, Charsets.UTF_8);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

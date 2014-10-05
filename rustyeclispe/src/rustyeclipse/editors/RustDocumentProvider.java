@@ -33,7 +33,7 @@ public class RustDocumentProvider extends FileDocumentProvider {
 		IDocument document = super.createDocument(element);
 		if (document instanceof IDocumentExtension3) {
 			IDocumentExtension3 extension3= (IDocumentExtension3) document;
-			IDocumentPartitioner partitioner= new FastPartitioner(RustCorePlugin.getDefault().scanners().wurstPartitionScanner(), RustPartitionScanner.PARTITION_TYPES);
+			IDocumentPartitioner partitioner= new FastPartitioner(RustCorePlugin.getDefault().scanners().rustPartitionScanner(), RustPartitionScanner.PARTITION_TYPES);
 			extension3.setDocumentPartitioner(RustConstants.RUST_PARTITIONING, partitioner);
 			partitioner.connect(document);
 		}

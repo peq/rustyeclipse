@@ -42,7 +42,7 @@ public class ScannerFactory {
 		return new SingleTokenScanner(getStyle(RustConstants.SYNTAXCOLOR_COMMENT));
 	}
 
-	public IPartitionTokenScanner wurstPartitionScanner() {
+	public IPartitionTokenScanner rustPartitionScanner() {
 		return new RustPartitionScanner();                         
 	}
 

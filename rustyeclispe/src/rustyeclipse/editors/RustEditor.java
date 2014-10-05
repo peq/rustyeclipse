@@ -23,13 +23,18 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
+import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 import org.eclipse.ui.texteditor.StatusTextEditor;
 
+import de.peeeq.eclipsewurstplugin.editor.WurstDocumentProvider;
+import de.peeeq.eclipsewurstplugin.editor.WurstTextDocumentProvider;
 import rustyeclipse.core.RustConstants;
 import rustyeclipse.core.RustNature;
 
@@ -51,6 +56,23 @@ public class RustEditor extends TextEditor {
 		
         IContextService cs = (IContextService)getSite().getService(IContextService.class);
         cs.activateContext(EDITOR_SCOPE);
+	}
+	
+	@Override
+	protected void doSetInput(IEditorInput input) throws CoreException {
+		setDocumentProvider(createDocumentProvider(input));
+		super.doSetInput(input);
+	}
+	
+	private IDocumentProvider createDocumentProvider(IEditorInput input) {
+		if (input instanceof IStorageEditorInput){
+			return new RustDocumentProvider();
+		} else if(input instanceof IFileEditorInput
+				|| input instanceof FileStoreEditorInput) {
+			return new WurstTextDocumentProvider();
+		}
+		throw new Error("Got IEditorInput of type " + input.getClass());
+		
 	}
 	
 	@Override

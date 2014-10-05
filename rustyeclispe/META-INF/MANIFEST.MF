@@ -19,4 +19,5 @@ Import-Package: com.google.common.base,
  org.eclipse.debug.core,
  org.eclipse.debug.core.model,
  org.eclipse.debug.ui,
- org.eclipse.jdt.annotation
+ org.eclipse.jdt.annotation,
+ org.eclipse.ui.console

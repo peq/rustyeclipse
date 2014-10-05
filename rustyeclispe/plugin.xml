@@ -69,6 +69,23 @@
             id="rustyeclipse.editors.RustEditor">
       </editor>
    </extension>
+   <!-- perspective -->
+	 <extension 
+        point="org.eclipse.ui.perspectives"> 
+        <perspective 
+            id="rustyeclipse.rustperspective" 
+            name="Rust" 
+            class="rustyeclipse.ui.RustPerspective" 
+            icon="icons/rust.png"> 
+        </perspective> 
+    </extension> 
+    <!-- add launch buttons to perspective -->
+    <extension point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension targetID="rustyeclipse.rustperspective">
+         <actionSet id="org.eclipse.debug.ui.launchActionSet">
+         </actionSet>
+      </perspectiveExtension>
+   </extension>
 <!-- Wizards -->
 	<extension
 	      point = "org.eclipse.ui.newWizards">
@@ -158,5 +175,50 @@
              parentId="org.eclipse.ui.textEditorScope">
        </context>
     </extension>
-
+<!-- run -->
+	<extension point = "org.eclipse.debug.core.launchConfigurationTypes">
+	   <launchConfigurationType
+	   	   id="rustyeclipse.rustlauchconfig"
+		   name="Lauch Rust"
+		   delegate="rustyeclipse.launch.LaunchDelegate"
+		   modes= "run" >
+	   </launchConfigurationType>
+	</extension>
+	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+    <launchConfigurationTypeImage
+        icon="icons/rustfile.png"
+        configTypeID="rustyeclipse.rustlauchconfig"
+        id="rustyeclipse.rustlauchconfig.image">
+    </launchConfigurationTypeImage>
+	</extension>
+    <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+	    <launchConfigurationTabGroup
+	        type="rustyeclipse.rustlauchconfig"
+	        class="rustyeclipse.launch.TabGroup"
+	        id="rustyeclipse.launch.TabGroup.tabgroup">
+	    </launchConfigurationTabGroup>
+	</extension>
+	<extension point="org.eclipse.debug.ui.launchShortcuts">
+	    <shortcut
+	        id="rustyeclipse.launch.Shortcut"
+	        class="rustyeclipse.launch.Shortcut"
+	        label="Rust"
+	        icon="icons/rustfile.png"
+	        modes="run">
+	        <contextualLaunch>
+	           <enablement>
+	             <with variable="selection">
+	               <count value="1"/>
+	               <iterate>
+	                 <or>
+	                   <test property="org.eclipse.debug.ui.matchesPattern" value="*.rs"/>
+	                   <test property="org.eclipse.debug.ui.matchesPattern" value="*.toml"/>
+	                   <adapt type="org.eclipse.core.resources.IProject"/>
+	                 </or>
+	               </iterate>
+	             </with>
+	           </enablement>
+	  		 </contextualLaunch>
+	    </shortcut>
+	</extension>
 </plugin>

@@ -53,8 +53,8 @@ public class RustNature implements IProjectNature {
 			} else if (askAddNature) {
 				final boolean answer[] = new boolean[] {false};
 				Display.getDefault().syncExec(() -> {
-					answer[0] = MessageDialog.openQuestion(null, "No Wurst nature", "No Wurst nature was found for the project " + p.getName() + ".\n"
-							+ "Do you want to add the Wurst nature?");
+					answer[0] = MessageDialog.openQuestion(null, "No Rust nature", "No Rust nature was found for the project " + p.getName() + ".\n"
+							+ "Do you want to add the Rust nature?");
 				});
 				if (answer[0]) {
 					addNatureToProject(p);
@@ -171,7 +171,6 @@ public class RustNature implements IProjectNature {
 			RustEditor editor = open(file, offsetProvider);
 			return editor;
 		} else { // open external file
-//			fileName = "/home/peter/temp/main.wurst";
 			IFileStore fileStore = EFS.getLocalFileSystem().getStore(new Path(fileName));
 			if (!fileStore.fetchInfo().isDirectory() && fileStore.fetchInfo().exists()) {
 			    IWorkbenchPage activeWorkbenchPage = getActiveWorkbenchPage();
@@ -187,9 +186,9 @@ public class RustNature implements IProjectNature {
 					}
 				});
 				if (editor[0] instanceof RustEditor) {
-					RustEditor wurstEditor = (RustEditor) editor[0];
-					wurstEditor.setHighlightRange(offsetProvider.apply(wurstEditor), 0, true);
-					return wurstEditor;
+					RustEditor rustEditor = (RustEditor) editor[0];
+					rustEditor.setHighlightRange(offsetProvider.apply(rustEditor), 0, true);
+					return rustEditor;
 				}
 			}
 		}
@@ -204,9 +203,9 @@ public class RustNature implements IProjectNature {
 		try {
 			IEditorPart editor = IDE.openEditor(getActiveWorkbenchPage(), file);
 			if (editor instanceof RustEditor) {
-				RustEditor wurstEditor = (RustEditor) editor;
-				wurstEditor.setHighlightRange(offsetProvider.apply(wurstEditor), 0, true);
-				return wurstEditor;
+				RustEditor rustEditor = (RustEditor) editor;
+				rustEditor.setHighlightRange(offsetProvider.apply(rustEditor), 0, true);
+				return rustEditor;
 			}
 		} catch (PartInitException e) {
 			e.printStackTrace();

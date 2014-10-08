@@ -27,6 +27,7 @@ public class Utils {
 	@SuppressWarnings("null")
 	public static String escapeHtml(String s) {
 		// TODO could use apache commons library?
+		s = s.replace("&", "&amp;");
 		s = s.replace("<", "&lt;");
 		s = s.replace(">", "&gt;");
 		return s;

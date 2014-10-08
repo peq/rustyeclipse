@@ -6,6 +6,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.ITextHover;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
+import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
@@ -19,12 +21,14 @@ import org.eclipse.swt.widgets.Shell;
 import rustyeclipse.core.RustConstants;
 import rustyeclipse.core.RustCorePlugin;
 import rustyeclipse.editor.RustHyperlinkDetector;
+import rustyeclipse.editors.autocomplete.RustContentAssistant;
 import rustyeclipse.ui.RustTextHover;
 import rustyeclipse.util.Utils;
 
 public class RustEditorConfig extends SourceViewerConfiguration {
 	private final ColorManager colorManager;
 	private final RustEditor editor;
+	private @Nullable ContentAssistant assistant;
 
 	public RustEditorConfig(RustEditor editor, ColorManager colorManager) {
 		this.editor = editor;
@@ -98,6 +102,31 @@ public class RustEditorConfig extends SourceViewerConfiguration {
 	@Override
 	public IAutoEditStrategy[] getAutoEditStrategies(@Nullable ISourceViewer sourceViewer, @Nullable String contentType) {
 		return new IAutoEditStrategy[] { new RustAutoIndentStrategy() };
+	}
+	
+	
+	
+	@Override
+	public IContentAssistant getContentAssistant(@Nullable ISourceViewer sourceViewer) {
+		ContentAssistant a = assistant;
+		if (a == null) {
+			assistant = a = new ContentAssistant();
+			a.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+			a.setContentAssistProcessor(new RustContentAssistant(editor), IDocument.DEFAULT_CONTENT_TYPE);
+			
+			a.setProposalPopupOrientation(IContentAssistant.PROPOSAL_OVERLAY);
+			a.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
+	//		assistant.setContextInformationPopupBackground(...);
+			a.setInformationControlCreator(getInformationControlCreator(sourceViewer));
+			a.enableAutoInsert(true);
+		}
+		if (RustCorePlugin.config().autocompleteEnabled()) {
+			a.enableAutoActivation(true);
+			a.setAutoActivationDelay((int) (1000*RustCorePlugin.config().autocompleteDelay()));
+		} else {
+			a.enableAutoActivation(false);
+		}
+		return a;
 	}
 
 }

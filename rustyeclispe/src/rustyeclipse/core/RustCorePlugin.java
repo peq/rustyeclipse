@@ -177,4 +177,9 @@ public class RustCorePlugin extends AbstractUIPlugin {
 		return getDefault().getPreferenceStore();
 	}
 
+	public static RustConfig config() {
+		// TODO get actual config
+		return new RustConfig();
+	}
+
 }

@@ -1,15 +1,16 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Rustyeclipse
-Bundle-SymbolicName: rustyeclipse;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: rustyeclipse_plugin;singleton:=true
+Bundle-Version: 0.0.2
 Bundle-Activator: rustyeclipse.core.RustCorePlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.jface.text,
  org.eclipse.ui.editors,
- org.eclipse.core.resources;bundle-version="3.9.100",
- org.eclipse.ui.ide;bundle-version="3.10.100"
+ org.eclipse.ui.workbench,
+ org.eclipse.core.resources,
+ org.eclipse.ui.ide
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: com.google.common.base,
@@ -20,4 +21,12 @@ Import-Package: com.google.common.base,
  org.eclipse.debug.core.model,
  org.eclipse.debug.ui,
  org.eclipse.jdt.annotation,
- org.eclipse.ui.console
+ org.eclipse.ui.console,
+ org.eclipse.core.filebuffers,
+ org.eclipse.jface.text.revisions,
+ org.eclipse.ui,
+ org.eclipse.ui.dialogs,
+ org.eclipse.ui.editors.text,
+ org.eclipse.ui.ide,
+ org.eclipse.ui.texteditor,
+ org.eclipse.ui.views.contentoutline

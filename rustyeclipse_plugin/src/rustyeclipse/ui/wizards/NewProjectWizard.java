@@ -94,7 +94,10 @@ public class NewProjectWizard extends Wizard implements INewWizard {
 
 	private void createProjectSkeleton(File f, String projectName) {
 		try {
-			String cargoContents = "[package]\n\nname = \""+projectName+"\"\nversion = \"0.0.1\"";
+			String cargoContents = "[package]\n\n"
+					+ "name = \""+projectName+"\"\n"
+							+ "version = \"0.0.1\"\n"
+							+ "authors = []\n";
 			File cargoFile = new File(f, "Cargo.toml");
 			if (!cargoFile.exists()) {
 				Files.write(cargoContents, cargoFile, Charsets.UTF_8);

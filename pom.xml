@@ -3,13 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>rustyeclipse</groupId>
 	<artifactId>rustyeclipse</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.1</version>
 	<properties>
 		<tycho-version>0.21.0</tycho-version>
 	</properties>
 	<packaging>pom</packaging>
 	<modules>
-		<module>rustyeclispe_plugin</module>
+		<module>rustyeclipse_plugin</module>
 		<module>rustyeclipse_feature</module>
 		<module>rustyeclipse_updatesite</module>
 	</modules>

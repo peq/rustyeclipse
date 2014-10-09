@@ -4,10 +4,10 @@
   <parent>
     <groupId>rustyeclipse</groupId>
     <artifactId>rustyeclipse</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.1</version>
   </parent>
   <groupId>rustyeclipse</groupId>
   <artifactId>rustyeclipse_plugin</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.1</version>
   <packaging>eclipse-plugin</packaging>
 </project>

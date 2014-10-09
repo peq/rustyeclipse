@@ -2,7 +2,7 @@
 <feature
       id="rustyeclipse_feature"
       label="Rustyeclipse_feature"
-      version="0.0.2">
+      version="0.0.1">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]

@@ -81,7 +81,7 @@ public class RustBuilder extends IncrementalProjectBuilder {
 	}
 
 	private void processCompilerOutput(IProject project, List<String> outputLines) {
-		Pattern p = Pattern.compile("^(.*):([0-9]+):([0-9]+):\\s+([0-9]+):([0-9]+)\\s+error:(.*)");
+		Pattern p = Pattern.compile("^(.*):([0-9]+):([0-9]+):\\s+([0-9]+):([0-9]+)\\s+(error|warning):(.*)");
 		String projectPath = project.getLocation().toOSString();
 		for (String line : outputLines) {
 			Matcher m = p.matcher(line);
@@ -91,12 +91,14 @@ public class RustBuilder extends IncrementalProjectBuilder {
 				int startColumn = Integer.parseInt(m.group(3));
 				int endLine = Integer.parseInt(m.group(4));
 				int endColumn = Integer.parseInt(m.group(5));
-			    String message = m.group(6);
+				String type = m.group(6);
+			    String message = m.group(7);
 			    file = file.replaceFirst(projectPath, "");
 			    IFile ifile = project.getFile(file);
 			    if (ifile != null) {
 			    	SourcePos position = new SourcePos(file, startLine-1, startColumn-1, endLine-1, endColumn-1);
-			    	CompileError err = new CompileError(position, message, ErrorType.ERROR);
+			    	ErrorType errorType = type.equals("error") ? ErrorType.ERROR : ErrorType.WARNING;
+					CompileError err = new CompileError(position, message, errorType);
 					RustNature.addErrorMarker(ifile, err, MARKER_TYPE);
 			    }
 			}

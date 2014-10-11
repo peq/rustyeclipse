@@ -10,7 +10,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
 
-import rustyeclipse.core.RustConstants;
+import rustyeclipse.core.RustCorePlugin;
 
 public class Icons {
 
@@ -35,7 +35,7 @@ public class Icons {
 	}
 	
 	public static Image createImage(String path){
-		Bundle bundle = Platform.getBundle(RustConstants.PLUGIN_ID);
+		Bundle bundle = Platform.getBundle(RustCorePlugin.PLUGIN_ID);
 		if (bundle == null) {
 			throw new RuntimeException("bundle is null");
 		}

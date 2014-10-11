@@ -73,7 +73,7 @@ public class RustBuilder extends IncrementalProjectBuilder {
 		List<String> cargoArgs = new ArrayList<>();
 		cargoArgs.add("build");
 		CargoProcess proc = new CargoProcess(project.getLocation().toFile(), cargoArgs);
-		// TODO add error markers
+		// add error markers
 		nature.clearAllMarkers();
 		processCompilerOutput(project, proc.getOutputErrorLines());
 		
@@ -117,7 +117,13 @@ public class RustBuilder extends IncrementalProjectBuilder {
 		if (nature != null) {
 			nature.clearAllMarkers();
 		}
-		// TODO call cargo clean
+		// call cargo clean
+		List<String> cargoArgs = new ArrayList<>();
+		cargoArgs.add("clean");
+		CargoProcess proc = new CargoProcess(getProject().getLocation().toFile(), cargoArgs);
+		proc.getOutputErrorLines().forEach(System.err::println);
+		proc.getOutputLines().forEach(System.out::println);
+		
 	}
 
 	public static boolean isRustMarker(IMarker marker) {

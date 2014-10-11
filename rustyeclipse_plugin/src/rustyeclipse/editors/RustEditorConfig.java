@@ -22,6 +22,7 @@ import rustyeclipse.core.RustConstants;
 import rustyeclipse.core.RustCorePlugin;
 import rustyeclipse.editor.RustHyperlinkDetector;
 import rustyeclipse.editors.autocomplete.RustContentAssistant;
+import rustyeclipse.preferences.RustPrefs;
 import rustyeclipse.ui.RustTextHover;
 import rustyeclipse.util.Utils;
 
@@ -120,9 +121,9 @@ public class RustEditorConfig extends SourceViewerConfiguration {
 			a.setInformationControlCreator(getInformationControlCreator(sourceViewer));
 			a.enableAutoInsert(true);
 		}
-		if (RustCorePlugin.config().autocompleteEnabled()) {
+		if (RustPrefs.get().autocompleteEnabled()) {
 			a.enableAutoActivation(true);
-			a.setAutoActivationDelay((int) (1000*RustCorePlugin.config().autocompleteDelay()));
+			a.setAutoActivationDelay((int) (1000*RustPrefs.get().autocompleteDelay()));
 		} else {
 			a.enableAutoActivation(false);
 		}

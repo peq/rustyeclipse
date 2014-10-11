@@ -26,6 +26,7 @@ import com.google.common.io.Files;
 import rustyeclipse.builder.SourcePos;
 import rustyeclipse.editor.RustHyperlink;
 import rustyeclipse.editors.RustEditor;
+import rustyeclipse.preferences.RustPrefs;
 import rustyeclipse.ui.Icons;
 import rustyeclipse.util.Utils;
 
@@ -54,13 +55,13 @@ public class RustContentAssistant implements IContentAssistProcessor {
 			Files.write(text, tempFile, Charsets.UTF_8);
 
 			List<String> command = new ArrayList<>();
-			command.add("racer");
+			command.add(RustPrefs.get().getRacerCommand());
 			command.add("complete");
 			command.add("" + lineNr);
 			command.add("" + columnNr);
 			command.add(tempFile.getAbsolutePath());
 			ProcessBuilder pb = new ProcessBuilder(command);
-			pb.environment().put("RUST_SRC_PATH", "/home/peter/work/rust/src");
+			pb.environment().put("RUST_SRC_PATH", RustPrefs.get().getRustSrcPath());
 			Process proc = pb.start();
 
 			List<String> output = Utils.streamToList(proc.getInputStream());

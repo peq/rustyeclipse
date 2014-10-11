@@ -31,6 +31,8 @@ import org.eclipse.ui.console.IOConsoleOutputStream;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 
+import rustyeclipse.preferences.RustPrefs;
+
 import com.google.common.collect.Maps;
 
 public class LaunchDelegate implements ILaunchConfigurationDelegate {
@@ -44,7 +46,7 @@ public class LaunchDelegate implements ILaunchConfigurationDelegate {
 		monitor.beginTask("start preparing " + project, 1);
 		File projectDir = project.getLocation().toFile();
 		List<String> commands = new ArrayList<>();
-		commands.add("cargo");
+		commands.add(RustPrefs.get().getCargoCommand());
 		commands.add("run");
 		ProcessBuilder pb = new ProcessBuilder(commands);
 		pb.directory(projectDir);
@@ -66,8 +68,7 @@ public class LaunchDelegate implements ILaunchConfigurationDelegate {
 //			System.out.println("terminated");
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		
 		

@@ -18,7 +18,8 @@ import rustyeclipse.editors.highlighting.ScannerFactory;
 
 public class RustCorePlugin extends AbstractUIPlugin {
 
-	public static final String PLUGIN_ID = "rustyeclipse";
+	public static final String PLUGIN_ID = "rustyeclipse_plugin";
+	public static final String PERSPECTIVE_ID = "rustyeclipse.rustperspective";
 	// The shared instance
 	private static @Nullable RustCorePlugin plugin;
 	private @Nullable ScannerFactory scanners;
@@ -85,7 +86,7 @@ public class RustCorePlugin extends AbstractUIPlugin {
 		setDefaultValue(SYNTAXCOLOR_COLOR + SYNTAXCOLOR_STRING,      SYNTAXCOLOR_RGB_STRING);
 		setDefaultValue(SYNTAXCOLOR_COLOR + SYNTAXCOLOR_ANNOTATION,  SYNTAXCOLOR_RGB_ANNOTATION);
 		setDefaultValue(SYNTAXCOLOR_COLOR + SYNTAXCOLOR_COMMENT,     SYNTAXCOLOR_RGB_COMMENT);
-		setDefaultValue(SYNTAXCOLOR_COLOR + SYNTAXCOLOR_HOTDOC,      SYNTAXCOLOR_RGB_HOTDOC);
+		setDefaultValue(SYNTAXCOLOR_COLOR + SYNTAXCOLOR_DOCCOMMENT,      SYNTAXCOLOR_RGB_HOTDOC);
 		setDefaultValue(SYNTAXCOLOR_COLOR + SYNTAXCOLOR_FUNCTION,    SYNTAXCOLOR_RGB_FUNCTION);
 		setDefaultValue(SYNTAXCOLOR_COLOR + SYNTAXCOLOR_DATATYPE,    SYNTAXCOLOR_RGB_DATATYPE);
 		setDefaultValue(SYNTAXCOLOR_COLOR + SYNTAXCOLOR_VAR,         SYNTAXCOLOR_RGB_VAR        );
@@ -100,7 +101,7 @@ public class RustCorePlugin extends AbstractUIPlugin {
 		setDefaultValue(SYNTAXCOLOR_BOLD + SYNTAXCOLOR_STRING,     false);
 		setDefaultValue(SYNTAXCOLOR_BOLD + SYNTAXCOLOR_ANNOTATION, false);
 		setDefaultValue(SYNTAXCOLOR_BOLD + SYNTAXCOLOR_COMMENT,    false);
-		setDefaultValue(SYNTAXCOLOR_BOLD + SYNTAXCOLOR_HOTDOC,    false);
+		setDefaultValue(SYNTAXCOLOR_BOLD + SYNTAXCOLOR_DOCCOMMENT,    false);
 		setDefaultValue(SYNTAXCOLOR_BOLD + SYNTAXCOLOR_FUNCTION,   false);
 		setDefaultValue(SYNTAXCOLOR_BOLD + SYNTAXCOLOR_DATATYPE,   false);
 		setDefaultValue(SYNTAXCOLOR_BOLD + SYNTAXCOLOR_VAR,        false);
@@ -114,7 +115,7 @@ public class RustCorePlugin extends AbstractUIPlugin {
 		setDefaultValue(SYNTAXCOLOR_ITALIC + SYNTAXCOLOR_STRING,     false);
 		setDefaultValue(SYNTAXCOLOR_ITALIC + SYNTAXCOLOR_ANNOTATION, false);
 		setDefaultValue(SYNTAXCOLOR_ITALIC + SYNTAXCOLOR_COMMENT,    false);
-		setDefaultValue(SYNTAXCOLOR_ITALIC + SYNTAXCOLOR_HOTDOC,    false);
+		setDefaultValue(SYNTAXCOLOR_ITALIC + SYNTAXCOLOR_DOCCOMMENT,    false);
 		setDefaultValue(SYNTAXCOLOR_ITALIC + SYNTAXCOLOR_FUNCTION,   true);
 		setDefaultValue(SYNTAXCOLOR_ITALIC + SYNTAXCOLOR_DATATYPE,   false);
 		setDefaultValue(SYNTAXCOLOR_ITALIC + SYNTAXCOLOR_VAR,        false);
@@ -128,7 +129,7 @@ public class RustCorePlugin extends AbstractUIPlugin {
 		setDefaultValue(SYNTAXCOLOR_UNDERLINE + SYNTAXCOLOR_STRING,     false);
 		setDefaultValue(SYNTAXCOLOR_UNDERLINE + SYNTAXCOLOR_ANNOTATION, false);
 		setDefaultValue(SYNTAXCOLOR_UNDERLINE + SYNTAXCOLOR_COMMENT,    false);
-		setDefaultValue(SYNTAXCOLOR_UNDERLINE + SYNTAXCOLOR_HOTDOC,    false);
+		setDefaultValue(SYNTAXCOLOR_UNDERLINE + SYNTAXCOLOR_DOCCOMMENT,    false);
 		setDefaultValue(SYNTAXCOLOR_UNDERLINE + SYNTAXCOLOR_FUNCTION,   false);
 		setDefaultValue(SYNTAXCOLOR_UNDERLINE + SYNTAXCOLOR_DATATYPE,   false);
 		setDefaultValue(SYNTAXCOLOR_UNDERLINE + SYNTAXCOLOR_VAR,        false);
@@ -142,7 +143,7 @@ public class RustCorePlugin extends AbstractUIPlugin {
 		setDefaultValue(SYNTAXCOLOR_STRIKETHROUGH + SYNTAXCOLOR_STRING,     false);
 		setDefaultValue(SYNTAXCOLOR_STRIKETHROUGH + SYNTAXCOLOR_ANNOTATION, false);
 		setDefaultValue(SYNTAXCOLOR_STRIKETHROUGH + SYNTAXCOLOR_COMMENT,    false);
-		setDefaultValue(SYNTAXCOLOR_STRIKETHROUGH + SYNTAXCOLOR_HOTDOC,    false);
+		setDefaultValue(SYNTAXCOLOR_STRIKETHROUGH + SYNTAXCOLOR_DOCCOMMENT,    false);
 		setDefaultValue(SYNTAXCOLOR_STRIKETHROUGH + SYNTAXCOLOR_FUNCTION,   false);
 		setDefaultValue(SYNTAXCOLOR_STRIKETHROUGH + SYNTAXCOLOR_DATATYPE,   false);
 		setDefaultValue(SYNTAXCOLOR_STRIKETHROUGH + SYNTAXCOLOR_VAR,        false);
@@ -158,7 +159,11 @@ public class RustCorePlugin extends AbstractUIPlugin {
 		setDefaultValue(RustConstants.RUST_ENABLE_RECONCILING, true);
 		setDefaultValue(RustConstants.RUST_RECONCILATION_DELAY, "0.5");
 		setDefaultValue(RustConstants.RUST_IGNORE_ERRORS, false);
-		setDefaultValue(RustConstants.RUST_WC3_PATH, "C:\\Warcraft III\\");
+		setDefaultValue(RustConstants.RUST_LIB_PATH, "");
+		setDefaultValue(RustConstants.RUST_COMMAND_CARGO, "cargo");
+		setDefaultValue(RustConstants.RUST_COMMAND_RACER, "racer");
+		setDefaultValue(RustConstants.RUST_COMMAND_RUSTC, "rustc");
+		
 	}
 	
 	private void setDefaultValue(String name, boolean value){
@@ -175,11 +180,6 @@ public class RustCorePlugin extends AbstractUIPlugin {
 	
 	public static IPreferenceStore getDefaultPreferenceStore(){
 		return getDefault().getPreferenceStore();
-	}
-
-	public static RustConfig config() {
-		// TODO get actual config
-		return new RustConfig();
 	}
 
 }

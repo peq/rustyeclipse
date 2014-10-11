@@ -56,8 +56,7 @@ public class ToggleCommentHandler extends AbstractHandler implements IHandler {
 			editor.selectAndReveal(startOffset, text.length());
 			
 		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		return null;
 	}

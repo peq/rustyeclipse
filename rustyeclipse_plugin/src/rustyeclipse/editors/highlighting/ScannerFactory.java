@@ -35,7 +35,7 @@ public class ScannerFactory {
 	}
 
 	public ITokenScanner hotDocScanner() {
-		return new SingleTokenScanner(getStyle(RustConstants.SYNTAXCOLOR_HOTDOC));
+		return new SingleTokenScanner(getStyle(RustConstants.SYNTAXCOLOR_DOCCOMMENT));
 	}
 
 	public ITokenScanner multilineCommentScanner() {

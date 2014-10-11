@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jdt.annotation.NonNull;
+import rustyeclipse.preferences.RustPrefs;
 
 public class CargoProcess extends RustToolProcess {
 
@@ -19,7 +19,7 @@ public class CargoProcess extends RustToolProcess {
 	public CargoProcess(File directory, List<String> args) {
 		Runtime rt = Runtime.getRuntime();
 		ArrayList<String> commands = new ArrayList<>();
-		commands.add("cargo");
+		commands.add(RustPrefs.get().getCargoCommand());
 		commands.addAll(args);
 		try {
 			System.out.println("commands = " + commands);

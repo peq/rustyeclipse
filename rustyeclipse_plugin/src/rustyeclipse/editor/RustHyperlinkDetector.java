@@ -24,6 +24,7 @@ import com.google.common.io.Files;
 
 import rustyeclipse.builder.SourcePos;
 import rustyeclipse.editors.RustEditor;
+import rustyeclipse.preferences.RustPrefs;
 import rustyeclipse.util.Utils;
 
 public class RustHyperlinkDetector implements IHyperlinkDetector {
@@ -72,7 +73,7 @@ public class RustHyperlinkDetector implements IHyperlinkDetector {
 			Files.write(text, tempFile, Charsets.UTF_8);
 			
 			List<String> command = new ArrayList<>();
-			command.add("racer");
+			command.add(RustPrefs.get().getRacerCommand());
 			command.add("find-definition");
 			command.add(""+lineNr);
 			command.add(""+columnNr);
@@ -121,14 +122,12 @@ public class RustHyperlinkDetector implements IHyperlinkDetector {
 			}
 			return hyperLinks.toArray(new IHyperlink[0]);
 		} catch (BadLocationException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} finally {
 			if (tempFile != null) {
 				tempFile.delete();
 			}
 		}
-		return null;
 	}
 
 }

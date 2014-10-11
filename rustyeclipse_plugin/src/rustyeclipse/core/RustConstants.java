@@ -24,7 +24,7 @@ public class RustConstants {
 	public static final String SYNTAXCOLOR_STRING      = "String";
 	public static final String SYNTAXCOLOR_ANNOTATION  = "Annotation";
 	public static final String SYNTAXCOLOR_COMMENT     = "Comment";
-	public static final String SYNTAXCOLOR_HOTDOC      = "Hotdoc";
+	public static final String SYNTAXCOLOR_DOCCOMMENT  = "Doc comment";
 	public static final String SYNTAXCOLOR_FUNCTION    = "Function";
 	public static final String SYNTAXCOLOR_DATATYPE    = "Datatype";
 	public static final String SYNTAXCOLOR_VAR         = "Var";
@@ -56,8 +56,11 @@ public class RustConstants {
 	public static final String RUST_ENABLE_AUTOCOMPLETE = "RUST_ENABLE_AUTOCOMPLETE";
 	public static final String RUST_ENABLE_RECONCILING = "RUST_ENABLE_RECONCILING";
 	public static final String RUST_RECONCILATION_DELAY = "RUST_RECONCILATION_DELAY";
-	public static final String RUST_WC3_PATH = "RUST_WC3_PATH";
 	public static final String RUST_IGNORE_ERRORS = "RUST_IGNORE_ERRORS";
+	public static final String RUST_COMMAND_RUSTC = "RUST_COMMAND_RUSTC";
+	public static final String RUST_COMMAND_CARGO = "RUST_COMMAND_CARGO";
+	public static final String RUST_COMMAND_RACER = "RUST_COMMAND_RACER";
+	public static final String RUST_LIB_PATH = "RUST_LIB_PATH";
 	
 	//Partition Scanner
 	public static final String PARTITION_SINLGE_LINE_COMMENT = "singleComment";
@@ -72,9 +75,8 @@ public class RustConstants {
 	public static final String POS_END_LINE = PLUGIN_PACKAGE + ".endPosLine";
 	public static final String POS_END_COLUMN = PLUGIN_PACKAGE + ".endPosColumn";
 
-	public static final String PLUGIN_ID = "rustyeclipse";
-
 	public static final String RUST_PARTITIONING = "__rust_partitioning";
+
 
 	
 }

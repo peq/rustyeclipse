@@ -16,6 +16,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 
+import rustyeclipse.core.RustCorePlugin;
 import rustyeclipse.core.RustNature;
 import rustyeclipse.util.UtilityFunctions;
 
@@ -77,8 +78,8 @@ public class NewProjectWizard extends Wizard implements INewWizard {
 			desc.setNatureIds(new String[]{RustNature.NATURE_ID});
 			project.setDescription(desc, null);
 			
-			// TODO show perspective
-			// workbench.showPerspective(RustPlugin.Rust_PERSPECTIVE_ID, workbench.getActiveWorkbenchWindow());
+			// show perspective
+			workbench.showPerspective(RustCorePlugin.PERSPECTIVE_ID, workbench.getActiveWorkbenchWindow());
 			// TODO create initial files with cargo
 			createProjectSkeleton(projectFile.getParentFile(), project.getName());
 			//createRustDependenciesFile(projectFile.getParentFile());

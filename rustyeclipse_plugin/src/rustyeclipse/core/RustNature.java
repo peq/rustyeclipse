@@ -35,7 +35,7 @@ import rustyeclipse.builder.SourcePos;
 import rustyeclipse.editors.RustEditor;
 
 public class RustNature implements IProjectNature {
-	public static final String NATURE_ID = RustCorePlugin.PLUGIN_ID + ".nature";
+	public static final String NATURE_ID = "rustyeclipse.nature";
 	private @Nullable IProject project;
 
 	public static @Nullable RustNature get(@Nullable IProject p) {

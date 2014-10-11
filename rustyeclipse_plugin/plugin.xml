@@ -221,4 +221,19 @@
 	  		 </contextualLaunch>
 	    </shortcut>
 	</extension>
+	  <!-- preference pages -->
+   <extension
+          point="org.eclipse.ui.preferencePages">
+       <page
+             class="rustyeclipse.preferences.RustPreferencePage"
+             id="rustyeclipse.preferences.RustPreferencePage"
+             name="Rust">
+       </page>
+       <page
+             category="rustyeclipse.preferences.RustPreferencePage"
+             class="rustyeclipse.preferences.RustSyntaxColoring"
+             id="rustyeclipse.preferences.RustSyntaxColoring"
+             name="Rust Syntax Coloring">
+       </page>
+    </extension>
 </plugin>

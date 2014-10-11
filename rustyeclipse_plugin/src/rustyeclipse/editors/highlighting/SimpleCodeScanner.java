@@ -94,11 +94,10 @@ public class SimpleCodeScanner extends RuleBasedScanner implements RustScanner {
 		jasstypeToken = makeToken(preferencestore, RustConstants.SYNTAXCOLOR_JASSTYPE);
 		keywordToken = makeToken(preferencestore, RustConstants.SYNTAXCOLOR_KEYWORD);
 		commentToken = makeToken(preferencestore, RustConstants.SYNTAXCOLOR_COMMENT);
-		hotdocToken = makeToken(preferencestore, RustConstants.SYNTAXCOLOR_HOTDOC);
+		hotdocToken = makeToken(preferencestore, RustConstants.SYNTAXCOLOR_DOCCOMMENT);
 		stringToken = makeToken(preferencestore, RustConstants.SYNTAXCOLOR_STRING);
 		annotationToken = makeToken(preferencestore, RustConstants.SYNTAXCOLOR_ANNOTATION);
 		identifierToken = makeToken(preferencestore, RustConstants.SYNTAXCOLOR_TEXT);
-		System.out.println("Colors updated. " + keywordToken.toString() + " ||| " + keywordToken.getData());
 	}
 
 	private Token makeToken(IPreferenceStore preferencestore, String key) {
